@@ -1,5 +1,8 @@
 package com.example.practice_solid.utils
 
+import com.example.practice_solid.model.AccessType
+import com.example.practice_solid.model.Permission
+
 /*interface PermissionManager{
     //fun assignGlobalPermission(userId: String, devices: List<String>, accessType: AccessType, overrideSpecific: Boolean)
     //fun assignSpecificPermission(userId: String, deviceId: String, accessType: AccessType)
@@ -17,9 +20,8 @@ open class /*User*/PermissionManager(
      * @return
      */
     /*override*/ fun getPermissionsByUser(userId: String): List<Permission> {
-        return permissions.distinctBy { it.userId == userId }
+        return permissions.filter { it.userId == userId }
     }
-
 }
 
 class DistributorPermissionManager(
@@ -43,9 +45,10 @@ class DistributorPermissionManager(
             val index = permissions.indexOfFirst { it.deviceId == deviceId && it.userId == userId }
             if(index != -1){
                 if (!permissions[index].isSpecific || overrideSpecific)
-                    permissions[index] = permissions[index].copy(accessType = accessType)
+                    permissions[index] = permissions[index].copy(accessType = accessType, isSpecific = false)
             }else{
-                permissions.add(Permission(
+                permissions.add(
+                    Permission(
                         userId = userId,
                         deviceId = deviceId,
                         accessType = accessType,
@@ -72,7 +75,8 @@ class DistributorPermissionManager(
         if (index != -1){
             permissions[index] = permissions[index].copy(accessType = accessType, isSpecific = true)
         }else{
-            permissions.add(Permission(
+            permissions.add(
+                Permission(
                     userId = userId,
                     deviceId = deviceId,
                     accessType = accessType,
@@ -98,15 +102,6 @@ class DistributorPermissionManager(
      * @return
      */
     fun getPermissionsByDevice(deviceId: String): List<Permission> {
-        return permissions.distinctBy { it.deviceId == deviceId }
+        return permissions.filter { it.deviceId == deviceId }
     }
-
-    /**
-     * Returns a list of permission for a specific user.
-     * @param userId to filter for.
-     * @return
-     */
-    /*override fun getPermissionsByUser(userId: String): List<Permission> {
-        return permissions.distinctBy { it.userId == userId }
-    }*/
 }

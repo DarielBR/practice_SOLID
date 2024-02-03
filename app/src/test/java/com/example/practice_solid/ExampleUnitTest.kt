@@ -3,10 +3,10 @@ package com.example.practice_solid
 import com.example.practice_solid.model.Device
 import com.example.practice_solid.model.Distributor
 import com.example.practice_solid.model.User
-import com.example.practice_solid.utils.AccessType
+import com.example.practice_solid.model.AccessType
 import com.example.practice_solid.utils.DeviceOwnershipRegistry
 import com.example.practice_solid.utils.DistributorPermissionManager
-import com.example.practice_solid.utils.Permission
+import com.example.practice_solid.model.Permission
 import com.example.practice_solid.utils.PermissionManager
 import org.junit.Test
 
@@ -25,12 +25,10 @@ class ExampleUnitTest {
         devices = mutableListOf(
             Device("device1", "Device 1", "distributor1"),
             Device("device2", "Device 2", "distributor1"),
-            Device("device3", "Device 3", "distributor2")
+            Device("device3", "Device 3", "distributor2"),
+            Device("device4", "Device 4", "distributor2"),
+            Device("device5", "Device 5", ""),
         )
-
-        devices.forEach { device ->
-            DeviceOwnershipRegistry.registerDeviceOwnership(device.id, device.owner)
-        }
 
         val sharedPermissions = mutableListOf<Permission>()
 
@@ -40,7 +38,11 @@ class ExampleUnitTest {
 
         user = User("user1", "User One", permissionManagerUser)
         distributor1 = Distributor("distributor1", "Distributor One", mutableListOf("device1", "device2"), permissionManagerDistributor1)
-        distributor2 = Distributor("distributor2", "Distributor Two", mutableListOf("device3"), permissionManagerDistributor2)
+        distributor2 = Distributor("distributor2", "Distributor Two", mutableListOf("device3", "device4"), permissionManagerDistributor2)
+
+        devices.forEach { device ->
+            DeviceOwnershipRegistry.registerDeviceOwnership(device.id, device.owner)
+        }
     }
     @Test
     fun `Test list of devices a user can access`() {
@@ -57,9 +59,11 @@ class ExampleUnitTest {
     fun `Test list of users who have access to a device`() {
         // Setup: Assign permissions
         distributor1.assignGlobalPermission("user1", AccessType.READ_ONLY, overrideSpecific = false)
+        distributor1.assignGlobalPermission("distributor2", AccessType.FULL_ACCESS, true)
 
         val devicePermissions = distributor1.getDevicePermissions("device1")
         assertTrue("User1 should have READ_ONLY access to device1", devicePermissions.any { it.userId == "user1" && it.accessType == AccessType.READ_ONLY })
+        assertTrue("Distributor 2 should have FULL_ACCESS to device1",devicePermissions.any { it.userId == "distributor2" && it.accessType == AccessType.FULL_ACCESS })
     }
 
     @Test

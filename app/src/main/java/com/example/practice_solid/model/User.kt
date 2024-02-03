@@ -1,6 +1,5 @@
 package com.example.practice_solid.model
 
-import com.example.practice_solid.utils.Permission
 import com.example.practice_solid.utils.PermissionManager
 
 open class User (

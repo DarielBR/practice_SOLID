@@ -1,4 +1,4 @@
-package com.example.practice_solid.utils
+package com.example.practice_solid.model
 
 data class Permission (
     val userId: String,

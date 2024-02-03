@@ -1,8 +1,6 @@
 package com.example.practice_solid.model
 
-import com.example.practice_solid.utils.AccessType
 import com.example.practice_solid.utils.DistributorPermissionManager
-import com.example.practice_solid.utils.Permission
 
 class Distributor(
     override val id: String,
