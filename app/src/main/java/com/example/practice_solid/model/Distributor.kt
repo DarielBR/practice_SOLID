@@ -7,7 +7,6 @@ class Distributor(
     override val id: String,
     override val name: String,
     private val deviceManager: DistributorDeviceManager,
-    //private val devices: MutableList<String>,
     private val permissionManager: DistributorPermissionManager,
 ): User(id, name, permissionManager) {
     private fun getDevicesIds() = deviceManager.getOwnedDeviceList(id).map { it.id }
