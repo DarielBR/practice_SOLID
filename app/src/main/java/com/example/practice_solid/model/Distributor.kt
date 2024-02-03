@@ -1,20 +1,22 @@
 package com.example.practice_solid.model
 
+import com.example.practice_solid.utils.DistributorDeviceManager
 import com.example.practice_solid.utils.DistributorPermissionManager
 
 class Distributor(
     override val id: String,
     override val name: String,
-    private val devices: MutableList<String>,
+    private val deviceManager: DistributorDeviceManager,
+    //private val devices: MutableList<String>,
     private val permissionManager: DistributorPermissionManager,
 ): User(id, name, permissionManager) {
-
+    private fun getDevicesIds() = deviceManager.getOwnedDeviceList(id).map { it.id }
     fun assignGlobalPermission(
         userId: String,
         accessType: AccessType,
         overrideSpecific: Boolean = false,
     ){
-        permissionManager.assignGlobalPermission(userId, devices, accessType, overrideSpecific)
+        permissionManager.assignGlobalPermission(userId, getDevicesIds(), accessType, overrideSpecific)
     }
 
     fun assignSpecificPermission(
@@ -34,23 +36,5 @@ class Distributor(
 
     fun getDevicePermissions(deviceId: String): List<Permission>{
         return permissionManager.getPermissionsByDevice(deviceId)
-    }
-
-    fun getUserPermissions(userId: String): List<Permission>{
-        return permissionManager.getPermissionsByUser(userId)
-    }
-
-    fun addDevice(deviceId: String){
-        devices.add(deviceId)
-        permissionManager.assignSpecificPermission(id, deviceId, AccessType.FULL_ACCESS)
-    }
-
-    fun deleteDevice(deviceId: String){
-        devices.remove(deviceId)
-        permissionManager.removePermission(id, deviceId)
-    }
-
-    init {
-        /*TODO*/
     }
 }

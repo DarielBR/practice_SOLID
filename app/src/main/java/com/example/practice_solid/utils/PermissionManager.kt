@@ -3,30 +3,26 @@ package com.example.practice_solid.utils
 import com.example.practice_solid.model.AccessType
 import com.example.practice_solid.model.Permission
 
-/*interface PermissionManager{
-    //fun assignGlobalPermission(userId: String, devices: List<String>, accessType: AccessType, overrideSpecific: Boolean)
-    //fun assignSpecificPermission(userId: String, deviceId: String, accessType: AccessType)
-    //fun removePermission(userId: String, deviceId: String)
-    //fun getPermissionsByDevice(deviceId: String): List<Permission>
+interface PermissionManager{
     fun getPermissionsByUser(userId: String): List<Permission>
-}*/
+}
 
-open class /*User*/PermissionManager(
+open class UserPermissionManager(
     private val permissions: MutableList<Permission> = mutableListOf()
-)/*: PermissionManager*/ {
+): PermissionManager {
     /**
      * Returns a list of permission for a specific user.
      * @param userId to filter for.
      * @return
      */
-    /*override*/ fun getPermissionsByUser(userId: String): List<Permission> {
+    override fun getPermissionsByUser(userId: String): List<Permission> {
         return permissions.filter { it.userId == userId }
     }
 }
 
 class DistributorPermissionManager(
     private val permissions: MutableList<Permission> = mutableListOf()
-): PermissionManager(permissions) {
+): PermissionManager {
 
     /**
      * Sets a permission type for a given user in a number of devices (Global permission assignment).
@@ -103,5 +99,14 @@ class DistributorPermissionManager(
      */
     fun getPermissionsByDevice(deviceId: String): List<Permission> {
         return permissions.filter { it.deviceId == deviceId }
+    }
+
+    /**
+     * Returns a list of permission for a specific user.
+     * @param userId to filter for.
+     * @return
+     */
+    override fun getPermissionsByUser(userId: String): List<Permission> {
+        return permissions.filter { it.userId == userId }
     }
 }
